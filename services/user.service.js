@@ -55,7 +55,7 @@ async function InsertedUsers(formdata){
 
 async function UpdatedUsers(formdata,id){
     const data = await UpdateUser(formdata,id)
-    if(data){
+    if(data && data.affectedRows === 1){
         return{
             error:false,
             data,
@@ -129,7 +129,7 @@ async function loginUser({Email,Password}){
         }
         const ismatch = await bcrypt.compare(Password,user.Password)
        if (!ismatch) {
-    return { error: true, message: 'Invalid password' };
+    return { error: true, message: 'Invalid password and Email' };
   }
     const token = jwt.sign({UserID: user.UserID,Email: user.Email,Role: user.Role},
     'shhhhh',

@@ -14,7 +14,7 @@ async function getAllorederItem(){
 
 async function getByIdorederItem(id){
     try{
-        const [data] = await db.query(`SELECT * FROM order_items where OrderItemID = ${id}`)
+        const [data] = await db.query(`SELECT * FROM order_items where order_item_id = ${id}`)
         return data
     }
     catch(err){
@@ -28,9 +28,9 @@ async function InsertOrderItems(formData) {
         const results = [];
         for (const item of formData) {
             await db.query(
-                `INSERT INTO order_items (OrderID, MenuItemID, Quantity, Price, Created)
-                 VALUES (?, ?, ?, ?, NOW())`,
-                [item.OrderID, item.MenuItemID, item.Quantity, item.Price]
+                `INSERT INTO order_items (order_id, item_id,quantity,price)
+                 VALUES (?, ?, ?, ?)`,
+                [item.order_id, item.item_id, item.	quantity, item.price]
             );
             results.push({
                 error: false,
@@ -47,12 +47,10 @@ async function InsertOrderItems(formData) {
 async function UpdateOrderItem(formData,id) {
     try {
         const [result] = await db.query(
-            `UPDATE order_items oi
-             JOIN orders o
-              ON oi.OrderID = o.OrderID
-             SET oi.Quantity = ?, oi.Price = ?
-             WHERE oi.OrderItemID = ?`,
-            [formData.Quantity, formData.Price, id]
+            `UPDATE order_items 
+             SET quantity = ?, price = ?
+             WHERE order_item_id = ?`,
+            [formData.quantity, formData.price, id]
         );
         return { error: false, message: "Updated Successfully", affectedRows: result.affectedRows };
     } catch (err) {
@@ -61,13 +59,13 @@ async function UpdateOrderItem(formData,id) {
     }
 }
 
-async function DeleteOrderItem(itemID) {
+async function DeleteOrderItem(id) {
     try {
         const [result] = await db.query(
-            `DELETE oi FROM orderitem oi
-             JOIN \`order\` o ON oi.OrderID = o.OrderID
-             WHERE oi.OrderItemID = ?`,
-            [itemID]
+            `DELETE  FROM order_items 
+             
+             WHERE order_item_id = ?`,
+            [id]
         );
         return { error: false, message: "Deleted Successfully", affectedRows: result.affectedRows };
     } catch (err) {

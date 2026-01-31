@@ -54,58 +54,37 @@ async function InsertUser(formdata){
     }
 }
 
-async function UpdateUser(formdata,id) {
-    try {
-        const results = [];
+async function UpdateUser(formdata, id) {
+  try {
+    const [data] = await db.query(
+      `UPDATE users 
+       SET 
+         UserName = ?,
+         Email = ?,
+         Phone = ?,
+         Password = ?,
+         Role = ?,
+         IsActive = ?,
+         Modified = NOW()
+       WHERE UserID = ?`,
+      [
+        formdata.UserName,
+        formdata.Email,
+        formdata.Phone,
+        formdata.Password,
+        formdata.Role,
+        formdata.IsActive,
+        id
+      ]
+    );
 
-        for (const item of formdata) {
-            const [data] = await db.query(
-                `UPDATE users 
-                 SET 
-                    UserName = ?,
-                    Email = ?,
-                    Phone = ?,
-                    Password = ?,
-                    Role = ?,
-                    IsActive = ?,
-                    Modified = NOW()
-                 WHERE UserID = ${id}`,
-                [
-                    
-                    item.UserName,
-                    item.Email,
-                    item.Phone,
-                    item.Password,
-                    item.Role,
-                    item.IsActive,
-                    item.UserID
-                ]
-            );
-            if(data.affectedRows === 0){
-                results.push({
-                UserID: item.UserID,
-                affectedRows:data.affectedRows,
-                error:true,
-                message:"Record Not Found"
-                })
-                
-            }
-            else{
-            results.push({
-                UserID: item.UserID,
-                affectedRows:data.affectedRows,
-                error: false,
-                message: "Updated successfully"
-            });
-        }
-    }
-
-        return results;
-    } catch (err) {
-        console.error("ERROR:", err.sqlMessage || err.message);
-        return false;
-    }
+    return data;
+  } catch (err) {
+    console.error("ERROR:", err.sqlMessage || err.message);
+    return null;
+  }
 }
+
 
 
 

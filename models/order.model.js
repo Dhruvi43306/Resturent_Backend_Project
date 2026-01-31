@@ -13,7 +13,7 @@ async function getAlloreder(){
 
 async function getByIdoreder(id){
     try{
-    const [data] = await db.query(`SELECT * FROM orders where OrderID = ${id}`)
+    const [data] = await db.query(`SELECT * FROM orders where order_id = ${id}`)
     return data
     }
     catch(err){
@@ -29,60 +29,46 @@ async function InsertOrder(formdata) {
 
     const [data] = await db.query(
       `INSERT INTO orders
-       (UserID, ManagerID, OrderNumber, TotalAmount, OrderStatus)
-       VALUES (?, ?, ?, ?, ?)`,
+       (customer_id, waiter_id,total_amount, status)
+       VALUES (?, ?, ?, ?)`,
       [
-        item.UserID,
-        item.ManagerID,
-        item.OrderNumber ?? null,
-        item.TotalAmount ?? 0,
-        item.OrderStatus ?? "Pending"
+        
+        item.customer_id,
+        item.waiter_id ?? null,
+        item.total_amount ?? 0,
+        item.status ?? "Pending"
       ]
     );
 
      results.push({
       error: false,
-      message: "Order created successfully",
-      OrderID: data.insertId
+      message: "Order created successfully"
     });
-    return results
   } 
+    return results
+
 }catch (err) {
     console.error("ERROR:", err);
     throw err;
   }
 }
 
-
 async function UpdateOrder(formdata, id) {
   try {
-    const [check] = await db.query(
-      `SELECT o.OrderID
-       FROM orders o
-       JOIN manager m ON m.ManagerID = o.ManagerID
-       WHERE o.OrderID = ? AND m.ManagerID = ?`,
-      [id, formdata.ManagerID]
-    );
-
-    if (check.length === 0) {
-      return {
-        error: true,
-        message: "Order not found or manager not authorized"
-      };
-    }
-
-    const [data] = await db.query(
-      `UPDATE orders
-       SET
-         OrderStatus = ?,
-         TotalAmount = ?
-       WHERE OrderID = ?`,
+    
+    await db.query(
+    `UPDATE orders
+       SET customer_id = ?, waiter_id = ?, total_amount = ?, status = ?
+       WHERE order_id = ?`,
       [
-        formdata.OrderStatus,
-        formdata.TotalAmount,
+        formdata.customer_id,
+        formdata.waiter_id,
+        formdata.total_amount,
+        formdata.status,
         id
       ]
-    );
+  );
+  
 
     return {
       error: false,
@@ -93,14 +79,12 @@ async function UpdateOrder(formdata, id) {
     throw err;
   }
 }
-async function DeleteOrder(orderId, managerId) {
+async function DeleteOrder(id) {
   try {
     const [data] = await db.query(
-      `DELETE o
-       FROM orders o
-       JOIN manager m ON m.ManagerID = o.ManagerID
-       WHERE o.OrderID = ? AND m.ManagerID = ?`,
-      [orderId, managerId]
+      `DELETE FROM orders 
+       WHERE order_id = ?`,
+      [id]
     );
 
     if (data.affectedRows === 0) {

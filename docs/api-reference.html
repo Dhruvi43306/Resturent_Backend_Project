@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant API | Developer Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/docs.css">
+</head>
+<body>
+
+<header class="hero">
+    <div class="hero-inner">
+        <div class="status-pill"><span class="dot"></span> System Operational</div>
+        <h1>Restaurant Service <span class="gradient-text">API Docs</span></h1>
+        <p>A robust interface for managing staff, real-time orders, and restaurant logistics.</p>
+    </div>
+</header>
+
+<div class="main-wrapper">
+    <aside class="sidebar">
+        <nav>
+            <div class="nav-group">Essentials</div>
+            <a href="#base-url" class="nav-link">Base URL</a>
+            <a href="#authentication" class="nav-link">Authentication</a>
+            
+            <div class="nav-group">Endpoints</div>
+            <a href="#user-management" class="nav-link">Users</a>
+            <a href="#restaurants" class="nav-link">Restaurants</a>
+            <a href="#menu-categories" class="nav-link">Menu Categories</a>
+            <a href="#menu-items" class="nav-link">Menu Items</a>
+            <a href="#orders" class="nav-link">Orders</a>
+            <a href="#orders-item" class="nav-link">Order Items</a>
+            <a href="#payment" class="nav-link">Payment</a>
+            
+            <div class="nav-group">Rules</div>
+            <a href="#roles" class="nav-link">Access Matrix</a>
+            <a href="#notes" class="nav-link">Important Notes</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <section id="base-url" class="card">
+            <div class="card-header">
+                <div class="icon-box">🌐</div>
+                <h2>Base URL</h2>
+            </div>
+            <div class="terminal-base">
+                <code>http://localhost:3000</code>
+                <span class="copy-hint">v1.0.0</span>
+            </div>
+        </section>
+
+        <section id="authentication" class="card">
+            <div class="card-header">
+                <div class="icon-box">🔐</div>
+                <h2>Authentication</h2>
+            </div>
+            <div class="auth-specs">
+                <p>Use <strong>Bearer Token</strong> in the Authorization header.</p>
+            </div>
+            <div class="code-window">
+                <div class="window-header">
+                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                    <span class="window-title">Login Example</span>
+                </div>
+                <pre><code><span class="token-method">POST</span> /users/login
+{
+  <span class="token-property">"UserName"</span>: <span class="token-string">"admin"</span>,
+  <span class="token-property">"Password"</span>: <span class="token-string">"******"</span>
+}</code></pre>
+            </div>
+        </section>
+
+        <section id="user-management" class="card">
+            <div class="card-header">
+                <div class="icon-box">👥</div>
+                <h2>User Management (Manager,Chef,Waiter,Cashier,Customer)</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Body</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/users</code></td><td>-</td><td>List all users</td></tr>
+                        <tr><td><span class="badge post">POST</span></td><td><code class="path">/users</code></td><td><span class="role-tag">{UserJSON}</span></td><td>Create User</td></tr>
+                        <tr><td><span class="badge put">PUT</span></td><td><code class="path">/users/:id</code></td><td><span class="role-tag">{Data}</span></td><td>Update User</td></tr>
+                        <tr><td><span class="badge delete">DEL</span></td><td><code class="path">/users/:id</code></td><td>-</td><td>Delete User</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+<br/>
+        <section id="restaurants" class="card">
+            <div class="card-header">
+                <div class="icon-box">🏢</div>
+                <h2>Restaurants</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/restaurants/manager</code></td><td>Manager</td><td>Get restaurant table info</td></tr>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/restaurants/waiter</code></td><td>Waiter</td><td>Get restaurant table info</td></tr>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/restaurants/manager/:id</code></td><td>Manager</td><td>Get By ID</td></tr>
+                        <tr><td><span class="badge put">PUT</span></td><td><code class="path">/restaurants/waiter:id</code></td><td>Waiter</td><td>Update details</td></tr>
+                        <tr><td><span class="badge delete">DELETE</span></td><td><code class="path">/restaurants/manager:id</code></td><td>Manager</td><td>Delete record</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="menu-categories" class="card">
+            <div class="card-header">
+                <div class="icon-box">🍕</div>
+                <h2>Menu Categories</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/menuCategory/</code></td><td>All</td><td>List Menu</td></tr>
+                        <tr><td><span class="badge post">POST</span></td><td><code class="path">/menuCategory/manager/:id</code></td><td>Manager</td><td>Add Category</td></tr>
+                        <tr><td><span class="badge put">PUT</span></td><td><code class="path">/menuCategory/manager/:id</code></td><td>Manager</td><td>Update Category</td></tr>
+                        <tr><td><span class="badge delete">DELETE</span></td><td><code class="path">/menuCategory/manager:id</code></td><td>Manager</td><td>Delete Category</td></tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="menu-items" class="card">
+            <div class="card-header">
+                <div class="icon-box">🍔</div>
+                <h2>Menu Items</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/menuItem/</code></td><td>All</td><td>List Items</td></tr>
+                        <tr><td><span class="badge post">POST</span></td><td><code class="path">/menuItem/manager/:id</code></td><td>Manager</td><td>Add Item</td></tr>
+                        <tr><td><span class="badge put">PUT</span></td><td><code class="path">/menuItem/manager/:id</code></td><td>Manager</td><td>Update Item</td></tr>
+                        <tr><td><span class="badge delete">DELETE</span></td><td><code class="path">/menuItem/manager/:id</code></td><td>Manager</td><td>Delete Item</td></tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="orders" class="card">
+            <div class="card-header">
+                <div class="icon-box">📝</div>
+                <h2>Orders</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/orders</code></td><td>All</td><td>List orders</td></tr>
+                        <tr><td><span class="badge post">POST</span></td><td><code class="path">/orders/:id</code></td><td>Waiter/Mgr</td><td>Add order</td></tr>
+                        <tr><td><span class="badge put">PUT</span></td><td><code class="path">/orders/:id</code></td><td>manager/waiter</td><td>Update Status</td></tr>
+                        <tr><td><span class="badge delete">DELETE</span></td><td><code class="path">/oreder/:id</code></td><td>Manager</td><td>Delete order</td></tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="logic-grid">
+                <div class="logic-card">
+                    <h4>🔄 Status Workflow</h4>
+                    <p class="status-flow">pending ➔ preparing ➔ served ➔ paid</p>
+                </div>
+                <div class="logic-card">
+                    <h4>🤖 Automatic Behaviors</h4>
+                    <ul>
+                        <li><strong>New Order:</strong> Table ➔ "occupied"</li>
+                        <li><strong>Paid Status:</strong> Table ➔ "free"</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="orders" class="card">
+            <div class="card-header">
+                <div class="icon-box">📝</div>
+                <h2>Order Item</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/orders</code></td><td>All</td><td>List orders Item</td></tr>
+                        <tr><td><span class="badge post">POST</span></td><td><code class="path">/orders/:id</code></td><td>manager</td><td>Add orderItem</td></tr>
+                        <tr><td><span class="badge put">PUT</span></td><td><code class="path">/orders/:id</code></td><td>manager</td><td>Update orderItem</td></tr>
+                        <tr><td><span class="badge delete">DELETE</span></td><td><code class="path">/orderItem/:id</code></td><td>Manager</td><td>Delete orderItem</td></tr>
+
+                    </tbody>
+                </table>
+            </div>
+            
+               
+           
+        </section>
+
+
+        <section id="payment" class="card">
+            <div class="card-header">
+                <div class="icon-box">💳</div>
+                <h2>Payment</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr><th>Method</th><th>Endpoint</th><th>Access</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><span class="badge get">GET</span></td><td><code class="path">/payment</code></td><td>Manager/Cashier</td><td>List Payment</td></tr>
+                        <tr><td><span class="badge post">POST</span></td><td><code class="path">/payment/:id</code></td><td>Manager</td><td>Add payment</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+ </div>
+        <section id="roles" class="card">
+            <div class="card-header">
+                <div class="icon-box">🎯</div>
+                <h2>Role Access Matrix</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>Method</th>
+                            <th>Manager</th>
+                            <th>Chef</th>
+                            <th>Waiter</th>
+                            <th>Cashier</th>
+                            <th>Customer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="4">Users</td>
+                            <td>GET</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td>
+                        </tr>
+                        <tr><td>POST</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>PUT</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>DELETE</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        
+                        <tr>
+                             <tr>
+                            <td rowspan="4">Resturent</td>
+                            <td>GET</td><td class="allowed">✅</td><td class="denied">❌</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td>
+                        </tr>
+                        <tr><td>POST</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>PUT</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>DELETE</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        
+                       <tr>
+                            <td rowspan="4">Menu Category</td>
+                            <td>GET</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td>
+                        </tr>
+                        <tr><td>POST</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>PUT</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>DELETE</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                         <tr>
+                            <td rowspan="4">Menu Item</td>
+                            <td>GET</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td>
+                        </tr>
+                        <tr><td>POST</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>PUT</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>DELETE</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr>
+                            <td rowspan="4">Order</td>
+                            <td>GET</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td>
+                        </tr>
+                        <tr><td>POST</td><td class="allowed">✅</td><td class="denied">❌</td><td class="allowed">✅</td><td class="denied">❌</td><td class="allowed">✅</td></tr>
+                        <tr><td>PUT</td><td class="allowed">✅</td><td class="denied">❌</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>DELETE</td><td class="allowed">✅</td><td class="denied">❌</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr>
+                            <td rowspan="4">Order Item</td>
+                            <td>GET</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td><td class="allowed">✅</td>
+                        </tr>
+                        <tr><td>POST</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="allowed">✅</td></tr>
+                        <tr><td>PUT</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr><td>DELETE</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td><td class="denied">❌</td></tr>
+                        <tr>
+                            <td rowspan="2">Payments</td>
+                            <td>GET</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="allowed">✅</td><td class="own">✅ </td>
+                        </tr>
+                        <tr><td>POST</td><td class="allowed">✅</td><td class="denied">❌</td><td class="denied">❌</td><td class="allowed">✅</td><td class="denied">❌</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="matrix-footer">
+                <p>* Chef: Status limited to preparing/served. Cashier: Status limited to paid.</p>
+            </div>
+        </section>
+
+        <section id="notes" class="card">
+            <div class="card-header">
+                <div class="icon-box">⚠️</div>
+                <h2>Important Notes</h2>
+            </div>
+            <ul class="notes-list">
+                <li><strong>Restaurant Isolation:</strong> Operations filter by <code>RestaurantID</code> from token.</li>
+                <li><strong>Token Expiration:</strong> Tokens expire after 1 hour.</li>
+                <li><strong>Ownership:</strong> All operations validate restaurant ownership.</li>
+            </ul>
+        </section>
+    </main>
+</div>
+
+<footer class="docs-footer">
+    <p>&copy; 2026 Restaurant API Docs • Built for high-performance teams</p>
+</footer>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 const db = require("../db/mysql")
 async function getAllResturent(){
     try{
-    const [data,fields] = await db.query(`SELECT * FROM restaurant`)
+    const [data,fields] = await db.query(`SELECT * FROM restaurant_tables`)
         return data
     }
     catch(err){
@@ -13,7 +13,7 @@ async function getAllResturent(){
 
 async function getByIdResturent(id){
     try{
-    const [data,fields] = await db.query(`SELECT * FROM restaurant where RestaurantID = ${id}`)
+    const [data,fields] = await db.query(`SELECT * FROM restaurant_tables where table_id = ${id}`)
         return data
     }
     catch(err){
@@ -28,15 +28,14 @@ async function InsertResturent(formdata){
     try{
         const results = []
         for(item of formdata){
-            await db.query(`INSERT INTO restaurant (RestaurantID,
-                RestaurantName,Address,Phone,
-                IsActive,Created,Modified)	
-                VALUES(?,?,?,?,?,NOW(),NOW())`,[
-                    item.RestaurantID,
-                    item.RestaurantName,
-                    item.Address,
-                    item.Phone,
-                    item.IsActive,	
+            await db.query(`INSERT INTO restaurant_tables (table_id,
+                table_number,capacity,status)	
+                VALUES(?,?,?,?)`,[
+                    item.table_id,
+                    item.table_number,
+                    item.capacity,
+                    item.status,
+                    	
                 ])
                 results.push({
                     error:false,
@@ -53,41 +52,22 @@ async function InsertResturent(formdata){
 
 async function UpdateResturent(formdata,id){
     try{
-        const results = []
-        for(item of formdata){
+       
             const [data] = await db.query(`
-                UPDATE restaurant
+                UPDATE restaurant_tables
                 SET 
-                RestaurantName = ?,
-                Address = ?,
-                Phone = ?,
-                IsActive = ?,
-                Modified = NOW()
-                where RestaurantID = ?`,[
-                    item.RestaurantName,
-                    item.Address,
-                    item.Phone,
-                    item.IsActive,
+                table_number = ?,
+                capacity = ?,
+                status = ?
+                where table_id = ?`,[
+                    
+                    formdata.table_number,
+                    formdata.capacity,
+                    formdata.status,
                     id
                 ])
-                if(data.affectedRows === 0){
-            results.push({
-                    RestaurantID: item.RestaurantID,
-                    error: true,
-                    message: "No rows were updated. Check RestaurantID or data."
-            })
-
-        }
-        else{
-            results.push({
-                    RestaurantID: item.RestaurantID,
-                    error: true,
-                    message: "Resturent Updated"
-            })
-        }
-        
-        }
-        return results
+                
+        return data
     }
     catch(err){
         console.error("ERROR:",err)
@@ -97,7 +77,7 @@ async function UpdateResturent(formdata,id){
 
 async function DeleteResturent(id){
     try{
-    const [data] = await db.query(`DELETE FROM restaurant WHERE RestaurantID = ${id}`)
+    const [data] = await db.query(`DELETE FROM restaurant_tables WHERE table_id = ${id}`)
         return data
     }
     catch(err){

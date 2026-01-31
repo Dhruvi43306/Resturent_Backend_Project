@@ -2,7 +2,7 @@ const db  = require("../db/mysql")
 
 async function getAllMenuItem(){
     try{
-    const [data] = await db.query(`SELECT * FROM menu_item`)
+    const [data] = await db.query(`SELECT * FROM menu_items`)
         return data
     }
     catch(err){
@@ -14,7 +14,7 @@ async function getAllMenuItem(){
 
 async function getByIdMenuItem(id){
     try{
-    const [data] = await db.query(`SELECT * FROM menu_item where MenuItemID =${id}`)
+    const [data] = await db.query(`SELECT * FROM menu_items where item_id =${id}`)
         return data
     }
     catch(err){
@@ -29,23 +29,23 @@ async function InsertMenuItem(formdata){
         const results = []
         for(item of formdata){
             await db.query(
-      `INSERT INTO menu_item
+      `INSERT INTO menu_items
       (
-        ManagerID,
-        MenuCategoryID,
-        ItemName,
-        Description,
-        Price,
-        IsAvailable
+        category_id,
+        	name,
+          price,
+          description,
+          image,
+          status
       )
       VALUES (?, ?, ?, ?, ?, ?)`,
       [
-        item.ManagerID,
-        item.MenuCategoryID,
-        item.ItemName,
-        item.Description ?? null,
-        item.Price,
-        item.IsAvailable ?? 1
+        item.category_id,
+        item.name,
+        item.price,
+        item.description ?? null,
+        item.image,
+        item.	status ?? 1
       ])
       results.push({
         error: false,
@@ -60,53 +60,47 @@ async function InsertMenuItem(formdata){
     }
 }
 
-async function CheckMenuCategory(managerId, categoryId) {
+async function CheckMenuCategory(category_id) {
   const [rows] = await db.query(
     `SELECT 1 FROM menu_category 
-     WHERE MenuCategoryID = ? AND ManagerID = ?`,
-    [categoryId, managerId]
+     WHERE category_id = ?`,
+    [category_id]
   );
   return rows.length > 0;
 }
-async function CheckManger(ManagerID){
-    const [rows] = await db.query(`SELECT * FROM manager where  ManagerID  = ?`,[ManagerID])
-    return rows.length > 0
-}
+
 
 async function UpdateMenuItem(formdata,id){
     try{
-    const existManagerId = await CheckManger(formdata.ManagerID);
-    if (!existManagerId) {
-      return { error: true, message: "Manager not found" };
-    }
+   
     const existMenuCategoryId = await CheckMenuCategory(
-      formdata.ManagerID,
-      formdata.MenuCategoryID
+     formdata.category_id
     );
 
     if (!existMenuCategoryId) {
       return {
         error: true,
-        message: "MenuCategory not found for this Manager"
+        message: "MenuCategory not found for this Waiter"
       };
     }
     const [data] = await db.query(
-      `UPDATE menu_item
+      `UPDATE menu_items
        SET
-         ManagerID = ?,
-         MenuCategoryID = ?,
-         ItemName = ?,
-         Description = ?,
-         Price = ?,
-         IsAvailable = ?
-       WHERE MenuItemID = ?`,
+         item_id = ?,
+         category_id = ?,
+         name = ?,
+         price = ?,
+        description = ?,
+         image = ?,
+         status = ?
+       WHERE item_id = ?`,
       [
-        formdata.ManagerID,
-        formdata.MenuCategoryID,
-        formdata.ItemName,
-        formdata.Description ?? null,
-        formdata.Price,
-        formdata.IsAvailable ?? 1,
+        formdata.category_id,
+        formdata.name,
+        formdata.price,
+        formdata.	description ?? null,
+        formdata.image,
+        formdata.status ?? 1,
         id
       ]
     );
@@ -131,13 +125,8 @@ async function UpdateMenuItem(formdata,id){
 
 async function DeleteMenuItem(id){
     try{
-    const [data] = await db.query(`Delete  mi
-        From menu_item mi
-        join manager mr
-        on mi.ManagerID = mr.ManagerID
-        join menu_category mc 
-        on mi.MenuCategoryID = mc.MenuCategoryID
-        where MenuItemID = ?`,[id])
+    const [data] = await db.query(`DELETE FROM menu_items WHERE item_id = ?`,[id])
+    return data
     }catch(err){
         console.error("ERROR:",err)
         throw err
